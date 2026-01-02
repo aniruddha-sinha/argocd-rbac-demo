@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-app
+  namespace: argocd # Always put App definitions in the argocd namespace
+spec:
+  project: 'project-x'
+  source:
+    repoURL: 'https://github.com/aniruddha-sinha/argo-cd-demo.git'
+    targetRevision: HEAD
+    path: 'development'
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: 'dev'
+  # Optional: Adds the ability to auto-sync
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
