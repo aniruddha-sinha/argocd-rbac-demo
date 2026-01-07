@@ -113,6 +113,7 @@ data:
     p, role:devlead-sync, applications, sync, project-y/*, allow
     p, role:devlead-sync, applications, action/apps/Deployment/restart, project-x/*, allow
     p, role:devlead-sync, applications, action/apps/Deployment/restart, project-y/*, allow
+    p, role:devlead-sync, applications, delete, project-x/*, allow
     # Developer: Read-only (get) access for project-x and project-y
     p, role:developer-read, applications, get, project-x/*, allow
     p, role:developer-read, applications, get, project-y/*, allow
