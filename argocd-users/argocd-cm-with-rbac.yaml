@@ -102,3 +102,25 @@ metadata:
     app.kubernetes.io/part-of: argocd
   name: argocd-cm
   namespace: argocd
+---
+apiVersion: v1
+data:
+  policy.csv: |-
+    # DevLead: Sync access for project-x and project-y
+    p, role:devlead-sync, applications, get, project-x/*, allow
+    p, role:devlead-sync, applications, sync, project-x/*, allow
+    p, role:devlead-sync, applications, get, project-y/*, allow
+    p, role:devlead-sync, applications, sync, project-y/*, allow
+    p, role:devlead-sync, applications, action/apps/Deployment/restart, project-x/*, allow
+    p, role:devlead-sync, applications, action/apps/Deployment/restart, project-y/*, allow
+    # Developer: Read-only (get) access for project-x and project-y
+    p, role:developer-read, applications, get, project-x/*, allow
+    p, role:developer-read, applications, get, project-y/*, allow
+
+    # Assignments
+    g, devlead, role:devlead-sync
+    g, developer, role:developer-read
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
