@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-platform
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: project-x-platform
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: project X platform for holiding project X platform related applications
+  destinations:
+  - namespace: dev-platform
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-app-platform
+  namespace: argocd
+spec:
+  destination:
+    namespace: dev-platform
+    server: https://kubernetes.default.svc
+  project: project-x-platform
+  source:
+    path: beta
+    repoURL: https://github.com/aniruddha-sinha/argo-cd-demo.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

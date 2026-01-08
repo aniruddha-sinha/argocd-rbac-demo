@@ -6,6 +6,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: dev-platform
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: prod
 ---
 apiVersion: v1
@@ -115,22 +120,39 @@ metadata:
 ---
 apiVersion: v1
 data:
-  policy.csv: |-
-    # DevLead: Sync access for project-x and project-y
-    p, role:devlead-sync, applications, get, project-x/*, allow
-    p, role:devlead-sync, applications, sync, project-x/*, allow
-    p, role:devlead-sync, applications, get, project-y/*, allow
-    p, role:devlead-sync, applications, sync, project-y/*, allow
-    p, role:devlead-sync, applications, action/apps/Deployment/restart, project-x/*, allow
-    p, role:devlead-sync, applications, action/apps/Deployment/restart, project-y/*, allow
-    p, role:devlead-sync, applications, delete, project-x/*, allow
-    # Developer: Read-only (get) access for project-x and project-y
-    p, role:developer-read, applications, get, project-x/*, allow
-    p, role:developer-read, applications, get, project-y/*, allow
+  policy.csv: |
+    #FOR DEVLEADS
+    #GET PERMISSION for DEVLEADS
+    p,role:devlead, applications, get, project-*/*, allow
+
+    #sync access to all the project whose name prefix is project- : includes project x, x-platform and project-y
+    p, role:devlead, applications, sync, project-*/*, allow
+
+    #deployment restart only for project-x and project-x-platform
+    p, role:devlead, applications, action/apps/Deployment/restart, project-x/*, allow
+    p, role:devlead, applications, action/apps/Deployment/restart, project-x-*/*, allow
+
+    #application delete only for project-x and project-x-platform
+    p, role:devlead, applications, delete, project-x/*, allow
+    p, role:devlead, applications, delete, project-x-*/*, allow
+
+
+    #scale permission for DEVLEADS
+    p, role:devlead, applications, action/apps/Deployment/scale, project-*/*, allow
+
+    #FOR DEVELOPERS
+    #GET PERMISSION FOR DEVELOPERS so that they are able to view the projects and applications
+    p, role:developer, applications, get, project-*/*, allow
+
+    #Only Sync access to only projects x and y and not the x-platform
+    p, role:developer, applications, sync, project-x/*, allow
+    p, role:developer, applications, sync, project-y/*, allow
+
 
     # Assignments
-    g, devlead, role:devlead-sync
-    g, developer, role:developer-read
+    g, developer, role:developer
+    g, devlead, role:devlead
+  policy.default: ""
 kind: ConfigMap
 metadata:
   name: argocd-rbac-cm
@@ -148,6 +170,22 @@ spec:
   description: project X for holiding project X related applications
   destinations:
   - namespace: dev
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: project-x-platform
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: project X platform for holiding project X platform related applications
+  destinations:
+  - namespace: dev-platform
     server: https://kubernetes.default.svc
   sourceRepos:
   - '*'
@@ -180,6 +218,25 @@ spec:
   project: project-x
   source:
     path: development
+    repoURL: https://github.com/aniruddha-sinha/argo-cd-demo.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-app-platform
+  namespace: argocd
+spec:
+  destination:
+    namespace: dev-platform
+    server: https://kubernetes.default.svc
+  project: project-x-platform
+  source:
+    path: beta
     repoURL: https://github.com/aniruddha-sinha/argo-cd-demo.git
     targetRevision: HEAD
   syncPolicy:

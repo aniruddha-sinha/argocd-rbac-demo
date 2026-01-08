@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: project-x-platform
+  namespace: argocd
+spec:
+  description: "project X platform for holiding project X platform related applications"
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  destinations:
+    - server: 'https://kubernetes.default.svc'
+      namespace: dev-platform
+  sourceRepos:
+    - '*'
