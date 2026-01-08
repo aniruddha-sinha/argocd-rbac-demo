@@ -2,6 +2,7 @@ apiVersion: v1
 data:
   accounts.developer: login
   accounts.devlead: login
+  accounts.nobody: login
   accounts.platformlead: login
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
@@ -107,10 +108,9 @@ metadata:
 apiVersion: v1
 data:
   policy.csv: |
+    #get
+    p, role:readonly, applications, get, */*, allow
     #FOR DEVLEADS
-    #GET PERMISSION for DEVLEADS
-    p,role:devlead, applications, get, project-*/*, allow
-
     #sync access to all the project whose name prefix is project- : includes project x, x-platform and project-y
     p, role:devlead, applications, sync, project-*/*, allow
 
@@ -127,19 +127,21 @@ data:
     p, role:devlead, applications, action/apps/Deployment/scale, project-*/*, allow
 
     #FOR DEVELOPERS
-    #GET PERMISSION FOR DEVELOPERS so that they are able to view the projects and applications
-    p, role:developer, applications, get, project-*/*, allow
-
     #Only Sync access to only projects x and y and not the x-platform
     p, role:developer, applications, sync, project-x/*, allow
     p, role:developer, applications, sync, project-y/*, allow
 
+    #for all other people who have no roles or role:none
+    p, role:none, *, *, *, deny
 
     # Assignments
+    g, developer, role:readonly
+    g, devlead, role:readonly
+    g, platformlead, role:readonly
     g, developer, role:developer
     g, devlead, role:devlead
     g, platformlead, role:devlead
-  policy.default: ""
+  policy.default: role:none
 kind: ConfigMap
 metadata:
   name: argocd-rbac-cm

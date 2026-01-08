@@ -41,4 +41,14 @@ argocd account update-password \
 --new-password rexo-platform-1003
 ```
 
+There is also a account named `nobody` which does not have any rbac but the default one; which is `none`
+
+
+```shell
+argocd account update-password \
+--account nobody \
+--current-password rexo-c-1003 \
+--new-password rexo-nobody-1003
+```
+
 9. Once everything is applied you can simply login and check the authorization status. 

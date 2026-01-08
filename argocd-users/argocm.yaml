@@ -3,6 +3,7 @@ data:
   accounts.developer: login
   accounts.devlead: login
   accounts.platformlead: login
+  accounts.nobody: login
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
       # Ignore the cluster-autoscaler status
