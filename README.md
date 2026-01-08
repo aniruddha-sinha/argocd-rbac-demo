@@ -34,4 +34,11 @@ argocd account update-password \
 --new-password rexo-prod-1003
 ```
 
+```shell
+argocd account update-password \
+--account platformlead \
+--current-password rexo-c-1003 \
+--new-password rexo-platform-1003
+```
+
 9. Once everything is applied you can simply login and check the authorization status. 
