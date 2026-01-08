@@ -36,4 +36,5 @@ data:
     # Assignments
     g, developer, role:developer
     g, devlead, role:devlead
+    g, platformlead, role:devlead
   policy.default: ''

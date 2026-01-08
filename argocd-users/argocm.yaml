@@ -2,6 +2,7 @@ apiVersion: v1
 data:
   accounts.developer: login
   accounts.devlead: login
+  accounts.platformlead: login
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
       # Ignore the cluster-autoscaler status
