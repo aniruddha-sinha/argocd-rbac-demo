@@ -2,6 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./dev/app-dev-final.yaml
-  - ./dev/app-dev-platform-final.yaml
+  - ./dev-platform/app-dev-platform-final.yaml
   - ./prod/app-prod-final.yaml
   - ./argocd-users/argocd-cm-with-rbac-final.yaml
