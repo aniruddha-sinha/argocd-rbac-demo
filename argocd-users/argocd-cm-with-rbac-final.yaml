@@ -110,27 +110,32 @@ data:
   policy.csv: |
     #get
     p, role:readonly, applications, get, */*, allow
-    #FOR DEVLEADS
-    #sync access to all the project whose name prefix is project- : includes project x, x-platform and project-y
-    p, role:devlead, applications, sync, project-*/*, allow
+    #FOR DEVLEADS and platform leads (project-y)
+    #sync access to all the project whose name prefix is project- : includes project x, x-platform
+    p, role:project-x-devlead, applications, sync, project-x/*, allow
+    p, role:project-x-devlead, applications, sync, project-x-*/*, allow
+    p, role:platformlead, applications, sync, project-y/*, allow
+
 
     #deployment restart only for project-x and project-x-platform
-    p, role:devlead, applications, action/apps/Deployment/restart, project-x/*, allow
-    p, role:devlead, applications, action/apps/Deployment/restart, project-x-*/*, allow
+    p, role:project-x-devlead, applications, action/apps/Deployment/restart, project-x/*, allow
+    p, role:project-x-devlead, applications, action/apps/Deployment/restart, project-x-*/*, allow
+    p, role:platformlead, applications, action/apps/Deployment/restart, project-y/*, allow
 
-    #app level k8s resource delete for project-x, project-x-platform and project-y
-    p, role:devlead, applications, delete/*/*/*dev*/*, project-x-*/*, allow
-    p, role:devlead, applications, delete/*/*/*dev*/*, project-x/*, allow
-    p, role:devlead, applications, delete/*/*/*prod*/*, project-y/*, allow
+    #app level k8s resource delete for project-x, project-x-platform
+    p, role:project-x-devlead, applications, delete/*/*/*dev*/*, project-x-*/*, allow
+    p, role:project-x-devlead, applications, delete/*/*/*dev*/*, project-x/*, allow
+    p, role:platformlead, applications, delete/*/*/*prod*/*, project-y/*, allow
 
 
     #scale permission for DEVLEADS
-    p, role:devlead, applications, action/apps/Deployment/scale, project-*/*, allow
+    p, role:project-x-devlead, applications, action/apps/Deployment/scale, project-x/*, allow
+    p, role:project-x-devlead, applications, action/apps/Deployment/scale, project-x-*/*, allow
+    p, role:platformlead, applications, action/apps/Deployment/scale, project-y/*, allow
 
     #FOR DEVELOPERS
-    #Only Sync access to only projects x and y and not the x-platform
-    p, role:developer, applications, sync, project-x/*, allow
-    p, role:developer, applications, sync, project-y/*, allow
+    #Only Sync access to only projects x and not the x-platform and project-y
+    p, role:project-x-developer, applications, sync, project-x/*, allow
 
     #for all other people who have no roles or role:none
     p, role:none, *, *, *, deny
@@ -139,9 +144,10 @@ data:
     g, developer, role:readonly
     g, devlead, role:readonly
     g, platformlead, role:readonly
-    g, developer, role:developer
-    g, devlead, role:devlead
-    g, platformlead, role:devlead
+    g, developer, role:project-x-developer
+    g, developer, role:project-y-developer
+    g, devlead, role:project-x-devlead
+    g, platformlead, role:platformlead
   policy.default: role:none
 kind: ConfigMap
 metadata:
