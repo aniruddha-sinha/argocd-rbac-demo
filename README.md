@@ -20,8 +20,8 @@ This document will be changed later but for now; I will feed in the details and 
 
 8. change the password of both the users using the following command (you will need to be an admin user to do this); 
 
-  ```shell
-  argocd account update-password \
+```shell
+argocd account update-password \
 --account developer \
 --current-password rexo-c-1003 \
 --new-password rexo-dev-1003
@@ -41,10 +41,46 @@ argocd account update-password \
 --new-password rexo-platform-1003
 ```
 
+```shell
+argocd account update-password \
+--account platformengineer \
+--current-password rexo-c-1003 \
+--new-password rexo-platformengineer-1003
+```
+
 There is also a account named `nobody` which does not have any rbac but the default one; which is `none`
 
 
 ```shell
+argocd account update-password \
+--account nobody \
+--current-password rexo-c-1003 \
+--new-password rexo-nobody-1003
+```
+
+All together to copy and paste
+
+```shell
+argocd account update-password \
+--account developer \
+--current-password rexo-c-1003 \
+--new-password rexo-dev-1003
+
+argocd account update-password \
+--account devlead \
+--current-password rexo-c-1003 \
+--new-password rexo-prod-1003
+
+rgocd account update-password \
+--account platformlead \
+--current-password rexo-c-1003 \
+--new-password rexo-platform-1003
+
+argocd account update-password \
+--account platformengineer \
+--current-password rexo-c-1003 \
+--new-password rexo-platformengineer-1003
+
 argocd account update-password \
 --account nobody \
 --current-password rexo-c-1003 \
