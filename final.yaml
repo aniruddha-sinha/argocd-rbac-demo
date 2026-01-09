@@ -18,6 +18,7 @@ data:
   accounts.developer: login
   accounts.devlead: login
   accounts.nobody: login
+  accounts.platformengineer: login
   accounts.platformlead: login
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
@@ -149,8 +150,9 @@ data:
     p, role:platformlead, applications, action/apps/Deployment/scale, project-y/*, allow
 
     #FOR DEVELOPERS
-    #Only Sync access to only projects x and not the x-platform and project-y
+    #Only Sync access to only projects x and not the x-platform
     p, role:project-x-developer, applications, sync, project-x/*, allow
+    p, role:platformengineer, applications, sync, project-y/*, allow
 
     #for all other people who have no roles or role:none
     p, role:none, *, *, *, deny
@@ -159,10 +161,12 @@ data:
     g, developer, role:readonly
     g, devlead, role:readonly
     g, platformlead, role:readonly
+    g, platformengineer, role:readonly
     g, developer, role:project-x-developer
     g, developer, role:project-y-developer
     g, devlead, role:project-x-devlead
     g, platformlead, role:platformlead
+    g, platformengineer, role:platformengineer
   policy.default: role:none
 kind: ConfigMap
 metadata:
